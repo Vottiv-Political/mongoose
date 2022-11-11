@@ -8,6 +8,12 @@ declare module 'mongoose' {
     [P in keyof T]?: Condition<T[P]>;
   } & RootQuerySelector<T>;
 
+
+  type Impossible<K extends keyof any> = {
+    [P in K]: never
+  }
+  type NoExtraProperties<T, U extends T = T> = U & Impossible<Exclude<keyof U, keyof T>>
+
   /**
    * Filter query to select the documents that match the query
    * @example
@@ -15,7 +21,7 @@ declare module 'mongoose' {
    * { age: { $gte: 30 } }
    * ```
    */
-  type FilterQuery<T> = _FilterQuery<T>;
+  type FilterQuery<T> = NoExtraProperties<_FilterQuery<T>>;
 
   type MongooseQueryOptions<DocType = unknown> = Pick<QueryOptions<DocType>, 'populate' | 'lean' | 'strict' | 'sanitizeProjection' | 'sanitizeFilter'>;
 
@@ -87,7 +93,7 @@ declare module 'mongoose' {
     $comment?: string;
     // we could not find a proper TypeScript generic to support nested queries e.g. 'user.friends.name'
     // this will mark all unrecognized properties as any (including nested queries)
-    [key: string]: any;
+    // [key: string]: any;
   };
 
   interface QueryTimestampsConfig {
