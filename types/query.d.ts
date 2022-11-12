@@ -1,7 +1,7 @@
 declare module 'mongoose' {
   import mongodb = require('mongodb');
 
-  export type ApplyBasicQueryCasting<T> = T | T[] | (T extends (infer U)[] ? U : any) | any;
+  export type ApplyBasicQueryCasting<T> = T | T[] | (T extends (infer U)[] ? U : any);
   type Condition<T> = ApplyBasicQueryCasting<T> | QuerySelector<ApplyBasicQueryCasting<T>>;
 
   type _FilterQuery<T> = {
@@ -81,6 +81,7 @@ declare module 'mongoose' {
     /** @see https://docs.mongodb.com/manual/reference/operator/query/or/#op._S_or */
     $or?: Array<FilterQuery<T>>;
     /** @see https://docs.mongodb.com/manual/reference/operator/query/text */
+    $expr?: any;
     $text?: {
       $search: string;
       $language?: string;
